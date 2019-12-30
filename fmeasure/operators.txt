@@ -1,0 +1,74 @@
+Implemented focus measure operators:
+
+ACMO: Absolute central moment (Shirvaikar2004)
+BREN: Brenner's focus measure (Santos97)
+CONT: Image contrast (Nanda2001)
+CURV: Image curvature (Helmli2001)
+DCTE: DCT Energy measure (Shen2006)
+DCTR: DCT Energy ratio (Lee2009)
+GDER: Gaussian derivative (Geusebroek2000)
+GLVA: Gray-level variance (Krotkov86)
+GLLV: Gray-level local variance (Pech2000)
+GLVN: Gray-level variance normalized (Santos97)
+GRAE: Energy of gradient (Subbarao92)
+GRAT: Thresholded gradient (Santos97)
+GRAS: Squared gradient (Eskicioglu95)
+HELM: Helmli's measure (Helmli2001)
+HISE: Histogram entropy (Krotkov86)
+HISR: Histogram range (Firestone91)
+LAPE: Energy of Laplacian (Subbarao92)
+LAPM: Modified laplacian (Nayar89)
+LAPV: Variance of laplacian (Pech2000)
+LAPD: Diagonal Laplacian (Thelen2009)
+SFIL: Steerable filters-based (Minhas2009)
+SFRQ: Spatial frequency (Eskicioglu95)
+TENG: Tenegrad (Krotkov86)
+TENV: Tenengrad variance (Pech2000)
+VOLA: Vollat's correlation-based (Santos97)
+WAVS: Wavelet sum (Yang2003)
+WAVV: Wavelet variance (Yang2003)
+WAVR: Wavelet ratio (Xie2006)
+
+Note: The implementations provided in this package are those of 
+the author based on his interpretation of the original papers.
+For futher details, refer to:
+
+S. Pertuz et al., Analysis of focus measure operators for Shape-
+from-focus. Pattern Recognition, 46(5):1415-1432, 2013.
+DOI:10.1016/j.patcog.2012.11.011
+
+References:
+[Eskicioglu95] 	Eskicioglu, A. M & Fisher, P. S.
+				Image quality measures and their performance. 1995. 
+[Firestone91] 	Firestone, L.; Cook, K.; Culp, K.; Talsania, N. & Jr., K. P.
+				Comparison of autofocus methods for automated microscopy. 1991. 
+[Geusebroek2000]Geusebroek, J.; Cornelissen, F.; Smeilders, A. & Geerts, H
+				Robust autofocusing in microscopy. 2000.  
+[Helmli2001] 	Helmli, F. & Scherer, S.
+				Adaptive shape from focus with an error estimation in light microscopy. 2001.
+[Krotkov86] 	Krotkov, E.
+				Range from focus. 1986.
+[Lee2009] 		Sang-Yong Lee, Jae-Tack Yoo, K. Y. S. K
+				Reduced Energy-Ratio Measure for Robust Autofocusing in Digital Camera. 2009.
+[Minhas2009] 	Minhas, R.; Mohammed, A. A.; Wu, Q. M. & Sid-Ahmed, M. A.
+				3D Shape from Focus and Depth Map Computation Using Steerable Filter. 2009.
+[Nanda2001] 	Nanda, H. & Cutler, R.
+				Practical calibrations for a real-time digital omnidirectional camera. 2001. 
+[Nayar89] 		Nayar, S. K.
+				Tech. report: Shape from focus. 1989. 
+[Pech2000] 		Pech, J.; Cristobal, G.; Chamorro, J. & Fernandez, J.
+				Diatom autofocusing in brightfield microscopy: a comparative study. 2000. 
+[Santos97] 		Santos, A.; de Solorzano, C. O.; Vaquero, J. J.; Peña, J. M.; Mapica, N. & Pozo, F. D.
+				Evaluation of autofocus functions in moleclar cytogenetic analysis. 1997.
+[Shen2006] 		Shen, C. & Chen, H.
+				Robust focus measure for low-contrast images. 2006.
+[Shirvaikar2004]Shirvaikar, M.V.
+				An optimal measure for camera focus and exposure. 2004. 
+[Subbarao92] 	Subbarao, M.; Choi, T. & Nizkad, A.
+				Tech. report: Focusing techniques. 1992. 
+[Thelen2009] 	Thelen, A.; Frey, S.; Hirsch, S. & Hering, P. Interpolation
+				Improvements in Shape-From-Focus for Holographic Reconstructions With Regard to Focus Operators, Neighborhood-Size, and Height Value. 2009
+[Xie2006] 		Xie, H.; Rong, W. & Sun, L.
+				Wavelet-Based Focus Measure and 3-D Surface Reconstruction Method for Microscopy Images. 2006. 
+[Yang2003] 		Yang, G. & Nelson, B.
+				Wavelet-based autofocusing and unsupervised segmentation of microscopic images. 2003. 
