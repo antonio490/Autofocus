@@ -4,6 +4,8 @@ import sys
 import cv2
 import picamera
 from time import ctime, sleep
+from datetime import datetime
+
 
 MIN_F = 0
 MAX_F = 10
@@ -53,6 +55,13 @@ if __name__ == "__main__":
 
     mf = 4
     sf = mf
+    today = datetime.now()
+
+    dir = os.getcwd()
+    new_dir = dir + "_" + today.utcnow().strftime('%Y-%m-%d_%H:%M:%S.%f')
+    
+    os.mkdir(new_dir)
+    os.chdir(new_dir)
 
     with picamera.PiCamera() as picam:
 
