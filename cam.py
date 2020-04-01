@@ -38,7 +38,8 @@ def getConfCam(picam):
 
 def setConfCam(picam):
     picam.resolution = (244, 244)
-    picam.brightness = 20
+    picam.color_effects = (128,128)
+    picam.brightness = 50
     picam.contrast = 30
     picam.vflip = True
     picam.hflip = True
@@ -57,11 +58,11 @@ if __name__ == "__main__":
     sf = mf
     today = datetime.now()
 
-    dir = os.getcwd()
-    new_dir = dir + "_" + today.utcnow().strftime('%Y-%m-%d_%H:%M:%S.%f')
-    
-    os.mkdir(new_dir)
-    os.chdir(new_dir)
+    dir = "/home/pi/arducam/album/"
+    new_dir = today.utcnow().strftime('%Y-%m-%d_%H:%M:%S.%f')
+
+    os.mkdir(dir+new_dir)
+    os.chdir(dir+new_dir)
 
     with picamera.PiCamera() as picam:
 
