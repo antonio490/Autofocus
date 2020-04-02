@@ -56,13 +56,18 @@ if __name__ == "__main__":
 
     mf = 4
     sf = mf
-    today = datetime.now()
 
-    dir = "/home/pi/arducam/album/"
-    new_dir = today.utcnow().strftime('%Y-%m-%d_%H:%M:%S.%f')
+    now = datetime.now()
 
-    os.mkdir(dir+new_dir)
-    os.chdir(dir+new_dir)
+    timestamp = datetime.timestamp(now)
+    print("timestamp =", int(timestamp))
+
+    wdir = os.getcwd()
+    new_dir = "/album"
+    #new_dir = today.utcnow().strftime('%Y-%m-%d_%H:%M:%S.%f')
+
+    os.mkdir(wdir+new_dir) # create new folder to store all photos
+    os.chdir(wdir+new_dir) # move inside the new folder 
 
     with picamera.PiCamera() as picam:
 
