@@ -24,7 +24,7 @@
 
 Enable the camera on the raspberry. Run a terminal type the next command:
 
-    $sudo raspi-config
+    $ sudo raspi-config
 
 After that select enable camera.
 
