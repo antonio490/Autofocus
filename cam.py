@@ -12,15 +12,55 @@ from datetime import datetime
 
 MIN_STEP = 0
 MAX_STEP = 10
-MIN_FOCUS = 4
+MIN_FOCUS = 0
+
+def TENG(img):
+    """Implements the Tenengrad (TENG) focus measure operator.
+    Based on the gradient of the image.
+    :param img: the image the measure is applied to
+    :type img: numpy.ndarray
+    :returns: numpy.float32 -- the degree of focus
+    """
+    gaussianX = cv2.Sobel(img, cv2.CV_64F, 1, 0)
+    gaussianY = cv2.Sobel(img, cv2.CV_64F, 0, 1)
+    return np.mean(gaussianX * gaussianX +
+                      gaussianY * gaussianY)
+
+def MLOG(img):
+    """Implements the MLOG focus measure algorithm.
+    :param img: the image the measure is applied to
+    :type img: numpy.ndarray
+    :returns: numpy.float32 -- the degree of focus
+    """
+    return np.max(cv2.convertScaleAbs(cv2.Laplacian(img, 3)))
+
+def LAPV(img):
+    """Implements the Variance of Laplacian (LAP4) focus measure
+    operator. Measures the amount of edges present in the image.
+    :param img: the image the measure is applied to
+    :type img: numpy.ndarray
+    :returns: numpy.float32 -- the degree of focus
+    """
+    return np.std(cv2.Laplacian(img, cv2.CV_64F)) ** 2
 
 def minFocus(mf):
+    """
+    Set camera focus to its minimum value.
+    :param mf: value to set by i2c on the camera.
+    :type mf: int
+    """
     value = (mf<<4) & 0x3ff0
     dat1 = (value>>8)&0x3f
     dat2 = value & 0xf0
     os.system("i2cset -y 0 0x0c %d %d" % (dat1,dat2))
 
 def stepFocus(sf):
+    """
+    Increase focus value at the arducam by i2c.
+    :param sf: value to set set by i2c on the camera.
+    :type sf: int
+    """
+    sf = sf*100 
     value = (sf<<4) & 0x3ff0
     dat1 = (value>>8)&0x3f
     dat2 = value & 0xf0
@@ -49,27 +89,47 @@ def setConfCam(picam):
     picam.hflip = True
     print("CONFIGURATION SET CORRECTLY")
 
-def insertRowCSV(step, fmeasure, path):
-    list_of_elem = [step, fmeasure, path]
+def insertRowCSV(step, LAPV, MLOG, TENG, path):
+    
     csv_file = "album.csv"
+    list_of_elem = [step, LAPV, MLOG, TENG, path]
 
-    print("insertRow")
-    with open(csv_file, 'a+', newline='') as write_obj:
-        csv_writer = writer(write_obj)
-        csv_writer.writerow(list_of_elem)
+
+    if os.path.exists(csv_file):
+        print("insertRow")
+        with open(csv_file, 'a+', newline='') as write_obj:
+            csv_writer = writer(write_obj)
+            csv_writer.writerow(list_of_elem)
+
+    else:
+        headers = ['STEP','LAPV','MLOG','TENG', 'IMG_PATH']
+        with open(csv_file, 'w', newline='') as write_obj:
+            csv_writer = writer(write_obj)
+            csv_writer.writerow(headers)
+            csv_writer.writerow(list_of_elem)
+
 
 
 
 def calcFocus(path):
-    print("measure focus LAPL")
+    """
+    Reads image captured and process the focus calculation
+    with three different algorithms.
+    :param path: absolute path of the last image taken by the camera.
+    :type path: string.
+    :returns: three focus measures values.
+    """
     img = cv2.imread(path)
-    fm = np.std(cv2.Laplacian(img, cv2.CV_64F)) ** 2
-    return fm
+
+    fmLPAV = LAPV(img)
+    fmMLOG = MLOG(img)
+    fmTENG = TENG(img)
+
+    return fmLPAV, fmMLOG, fmTENG
 
 
-def takePhoto(picam, i, sf, path):
+def takePhoto(picam, i, step, path):
 
-    print("START PHOTO")
     picam.start_preview()
     time.sleep(1)
 
@@ -79,10 +139,10 @@ def takePhoto(picam, i, sf, path):
     name = "IMG_"+str(timestamp)+".png"
     picam.capture(name,resize=(244,244))
 
-    fmeasure = calcFocus(name)
+    LAPV, MLOG, TENG = calcFocus(name) 
     path = path+"/"+name
 
-    insertRowCSV(sf, fmeasure, path) # Insert row into csv 
+    insertRowCSV(step, LAPV, MLOG, TENG, path) 
 
     picam.stop_preview()
     print("PHOTO TAKEN")
@@ -95,9 +155,9 @@ if __name__ == "__main__":
     new_dir = "/album"
 
     if not os.path.exists(wdir+new_dir):
-        os.mkdir(wdir+new_dir) # create new folder to store all photos
+        os.mkdir(wdir+new_dir) 
 
-    os.chdir(wdir+new_dir) # move inside the new folder 
+    os.chdir(wdir+new_dir)  
 
     path = os.getcwd()
 
@@ -109,8 +169,8 @@ if __name__ == "__main__":
         minFocus(MIN_FOCUS)
 
         for i in range(MIN_STEP, MAX_STEP):
-            sf += 100
+            sf += 1 
             takePhoto(picam, i, sf, path)
             stepFocus(sf)
 
-    picam.close()
+        picam.close()
