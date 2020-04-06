@@ -14,6 +14,10 @@ MIN_STEP = 0
 MAX_STEP = 10
 MIN_FOCUS = 0
 
+ls_LAPV = []
+ls_TENG = []
+images_path = []
+
 def TENG(img):
     """Implements the Tenengrad (TENG) focus measure operator.
     Based on the gradient of the image.
@@ -108,7 +112,25 @@ def insertRowCSV(step, LAPV, MLOG, TENG, path):
             csv_writer.writerow(headers)
             csv_writer.writerow(list_of_elem)
 
+def updateCSV(localMaxPos):
+    
+    csv_file = "album.csv"
 
+    if os.path.exists(csv_file):
+        with open(csv_file, 'a+', newline='') as write_obj:
+            csv_writer = writer(write_obj)
+            for i in range(1,11):
+                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], images_path[i-1], (localMaxPos-i)]
+                csv_writer.writerow(list_of_elem)
+
+    else:
+        headers = ['STEP','LAPV','TENG', 'IMG_PATH', 'MV_STEP']
+        with open(csv_file, 'w', newline='') as write_obj:
+            csv_writer = writer(write_obj)
+            csv_writer.writerow(headers)
+            for i in range(1,11):
+                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], images_path[i-1], (localMaxPos-i)]
+                csv_writer.writerow(list_of_elem)
 
 
 def calcFocus(path):
@@ -125,6 +147,9 @@ def calcFocus(path):
     fmMLOG = MLOG(img)
     fmTENG = TENG(img)
 
+    ls_LAPV.append(fmLPAV)
+    ls_TENG.append(fmTENG)
+
     return fmLPAV, fmMLOG, fmTENG
 
 
@@ -139,10 +164,13 @@ def takePhoto(picam, i, step, path):
     name = "IMG_"+str(timestamp)+".png"
     picam.capture(name,resize=(244,244))
 
-    LAPV, MLOG, TENG = calcFocus(name) 
+    #LAPV, MLOG, TENG = calcFocus(name) 
+    calcFocus(name)
     path = path+"/"+name
 
-    insertRowCSV(step, LAPV, MLOG, TENG, path) 
+    images_path.append(path)
+
+    #insertRowCSV(step, LAPV, MLOG, TENG, path) 
 
     picam.stop_preview()
     print("PHOTO TAKEN")
@@ -163,7 +191,7 @@ if __name__ == "__main__":
 
     with picamera.PiCamera() as picam:
 
-        getConfCam(picam)
+        #getConfCam(picam)
         setConfCam(picam)
 
         minFocus(MIN_FOCUS)
@@ -172,5 +200,11 @@ if __name__ == "__main__":
             sf += 1 
             takePhoto(picam, i, sf, path)
             stepFocus(sf)
+        
+        maxLPAV = max(ls_LAPV)
+        indexMax = ls_LAPV.index(max(ls_LAPV)) + 1
+        print("MAX: %d POSITION: %d" % (maxLPAV, indexMax))
+
+        updateCSV(indexMax)
 
         picam.close()
