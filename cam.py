@@ -3,7 +3,9 @@ import time
 import sys
 import cv2
 import csv
+import cpbd
 from csv import writer
+from scipy import ndimage
 import picamera
 import numpy as np
 from time import ctime, sleep
@@ -16,6 +18,7 @@ MIN_FOCUS = 0
 
 ls_LAPV = []
 ls_TENG = []
+ls_CPBD = []
 images_path = []
 
 def TENG(img):
@@ -70,6 +73,22 @@ def stepFocus(sf):
     dat2 = value & 0xf0
     os.system("i2cset -y 0 0x0c %d %d" % (dat1,dat2))
 
+def stepDue(localMax, i):
+    if abs(localMax - i) < 3:
+        due = 'small'
+    else:
+        due = 'big'
+    
+    return due
+
+def trend(i):
+    if ls_LAPV[i-1] <= ls_LAPV[i-2]:
+        trend = 'down'
+    else:
+        trend = 'up'
+
+    return trend
+
 def getConfCam(picam):
     print("Shutter speed: ", picam.shutter_speed)
     print("Saturation: ", picam.saturation)
@@ -93,6 +112,7 @@ def setConfCam(picam):
     picam.hflip = True
     print("CONFIGURATION SET CORRECTLY")
 
+'''
 def insertRowCSV(step, LAPV, MLOG, TENG, path):
     
     csv_file = "album.csv"
@@ -112,24 +132,47 @@ def insertRowCSV(step, LAPV, MLOG, TENG, path):
             csv_writer.writerow(headers)
             csv_writer.writerow(list_of_elem)
 
+'''
+
 def updateCSV(localMaxPos):
     
     csv_file = "album.csv"
+    due = 'none'
+    ratio = 0
 
     if os.path.exists(csv_file):
         with open(csv_file, 'a+', newline='') as write_obj:
             csv_writer = writer(write_obj)
             for i in range(1,11):
-                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], images_path[i-1], (localMaxPos-i)]
+                due = stepDue(localMaxPos, i)
+
+                if i==1:
+                    fm = ls_LAPV[i-1]
+                    ls_LAPV.insert(0, fm)
+
+                ratio = ls_LAPV[i-1] / ls_LAPV[i-2]
+                trend = trend(i)
+
+
+                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], ls_CPBD[i-1], ls_LAPV[i-2], ls_LAPV[i], (localMaxPos-i), ratio, trend, images_path[i-1], due]
                 csv_writer.writerow(list_of_elem)
 
     else:
-        headers = ['STEP','LAPV','TENG', 'IMG_PATH', 'MV_STEP']
+        headers = ['STEP','LAPV','TENG', 'CPBD', 'prevF', 'nextF', 'MV_STEP', 'ratio', 'trend','IMG_PATH', 'due']
         with open(csv_file, 'w', newline='') as write_obj:
             csv_writer = writer(write_obj)
             csv_writer.writerow(headers)
             for i in range(1,11):
-                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], images_path[i-1], (localMaxPos-i)]
+                due = stepDue(localMaxPos, i)
+
+                if i==1:
+                    fm = ls_LAPV[i-1]
+                    ls_LAPV.insert(0,fm)
+                
+                ratio = ls_LAPV[i-1] / ls_LAPV[i-2]
+                trend = trend(i)
+
+                list_of_elem = [i, ls_LAPV[i-1], ls_TENG[i-1], ls_CPBD[i-1], ls_LAPV[i-2], ls_LAPV[i], (localMaxPos-i), ratio, trend, images_path[i-1], due]
                 csv_writer.writerow(list_of_elem)
 
 
@@ -147,8 +190,11 @@ def calcFocus(path):
     fmMLOG = MLOG(img)
     fmTENG = TENG(img)
 
+    fmCPBD = cpbd.compute(img)
+
     ls_LAPV.append(fmLPAV)
     ls_TENG.append(fmTENG)
+    ls_CPBD.append(fmCPBD)
 
     return fmLPAV, fmMLOG, fmTENG
 
