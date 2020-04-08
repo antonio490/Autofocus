@@ -11,7 +11,7 @@ from datetime import datetime
 
 
 MIN_STEP = 0
-MAX_STEP = 10
+MAX_STEP = 20
 MIN_FOCUS = 0
 IMG_SIZE = 244
 
@@ -70,7 +70,8 @@ def stepFocus(sf):
     :param sf: value to set set by i2c on the camera.
     :type sf: int
     """
-    sf = sf*100 
+    sf = int(sf*1000 / MAX_STEP)
+
     value = (sf<<4) & 0x3ff0
     dat1 = (value>>8)&0x3f
     dat2 = value & 0xf0
@@ -85,7 +86,7 @@ def stepDue(localMax, i):
     return due
 
 def tendency(i):
-    if ls_LAPV[i-1] <= ls_LAPV[i-2]:
+    if ls_LAPV[i] <= ls_LAPV[i-1]:
         trend = 'down'
     else:
         trend = 'up'
@@ -233,9 +234,10 @@ if __name__ == "__main__":
         minFocus(MIN_FOCUS)
 
         for i in range(MIN_STEP, MAX_STEP):
-            sf += 1 
             takePhoto(picam, i, sf, path)
             stepFocus(sf)
+            sf += 1 
+
         
         indexMax = ls_LAPV.index(max(ls_LAPV))
         print("MAX: %d POSITION: %d" % (ls_LAPV[indexMax], indexMax+1))
