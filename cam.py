@@ -11,9 +11,10 @@ from datetime import datetime
 
 
 MIN_STEP = 0
-MAX_STEP = 20
+MAX_STEP = 10
 MIN_FOCUS = 0
 IMG_SIZE = 244
+BRIGHTNESS = 60
 
 ls_LAPV = []
 ls_TENG = []
@@ -118,7 +119,7 @@ def getConfCam(picam):
 def setConfCam(picam):
     picam.resolution = (244, 244)
     picam.color_effects = (128,128)
-    picam.brightness = 50
+    picam.brightness = BRIGHTNESS
     picam.contrast = 30
     picam.vflip = True
     picam.hflip = True
@@ -126,7 +127,6 @@ def setConfCam(picam):
 
 
 def updateCSV(localMaxPos):
-    
     csv_file = "album.csv"
 
     if os.path.exists(csv_file):
@@ -144,7 +144,7 @@ def updateCSV(localMaxPos):
                     list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i], (localMaxPos-i), r, trend, images_path[i], due]
                 else:
                     list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
-                
+
                 csv_writer.writerow(list_of_elem)
 
     else:
