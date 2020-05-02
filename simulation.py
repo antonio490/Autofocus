@@ -89,15 +89,16 @@ def randomFocus(picam):
     :param sf: value to set set by i2c on the camera.
     :type sf: int
     """
-    #sf = int(sf*1000 / MAX_STEP)
-    sf = random.randint(0, 1000)
+    sfr = random.randint(0, 10)
+    sf = int(sfr*1000 / MAX_STEP)
+    print("FOCUS: %d" % sfr)
 
     value = (sf<<4) & 0x3ff0
     dat1 = (value>>8)&0x3f
     dat2 = value & 0xf0
     os.system("i2cset -y 0 0x0c %d %d" % (dat1,dat2)) 
 
-    return sf
+    return sfr
 
 def stepFocus(sf):
     """
@@ -190,12 +191,14 @@ if __name__ == "__main__":
 
 
         sf = randomFocus(picam)
+        rf = sf # Save randomFocus
+        print("RANDOM FOCUS: %d" % rf)
 
         # take 3 pictures
         for i in range(0, 3):
             takePhoto(picam, i, sf, path)
             stepFocus(sf)
-            sf += 1 
+            sf += 1
 
         createCSV()
 
