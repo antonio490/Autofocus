@@ -96,12 +96,16 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 3. Script takePhoto help us text our result visually. 
 
+<code>
+
     small   0  | big 1
 
     backward 0 | fordward 1
    
+</code>
+<code>
 
-    $python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
+    $ python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
     
-
+</code>
 
