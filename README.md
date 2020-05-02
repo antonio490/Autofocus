@@ -49,7 +49,6 @@ Reboot the raspberry after enabling the i2c port.
 
 Laplacian operator is used to measure the second derivative of an image. The Laplacian highlights regions of an image containing rapid intensity changes, like the Sobel and Scharr oeprators. The more an image is blurred, the less edges there are.
 
-
 ### S3
 
 Most of the focus measurement are based on edge detection.
@@ -62,3 +61,21 @@ https://sites.google.com/site/cuongvt101/research/Sharpness-measure
 Defocus blur is extremely common in images captured using optical imaging systems. It may be undesirable, but may also be an intentional artistic effect, thus, it can either enhance or inhibit our visual perception of the image scene. For tasks such as image restoration and object recognition, one might want to segment a partially blurred image into blurred and non-blurred regions.
 
 https://www.cs.usask.ca/faculty/eramian/defocusseg/
+
+
+
+# Execution
+
+1. First we need to train the model. To do that we have done various executions of the script cam.py which automatically generates a csv file with information from the images captured. 
+
+
+2. Once we have our model saved we can start to test images captured. simulation.py captured three images and returned and array with 'due' step need to be done. If value returned is equal to 0 a small step (1 focus encrease/decrease) should be perform and if it is equal to 1 then it is a big step (3 focus increase/decrease).
+
+3. Script takePhoto help us text our result visually. 
+   
+   <code>
+        $python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
+
+            small   0  | big 1
+            backward 0 | fordward 1
+   </code>
