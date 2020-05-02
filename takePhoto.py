@@ -20,6 +20,7 @@ def stepFocus(sf):
     :type sf: int
     """
     sf = int(sf*1000 / MAX_STEP)
+    print("FOCUS POSITION: %d" % sf)
 
     value = (sf<<4) & 0x3ff0
     dat1 = (value>>8)&0x3f
@@ -72,26 +73,42 @@ def main(argv):
 
     num = len(sys.argv) - 1
 
-    print("Number of arguments: %d", num)
+    print("Number of arguments: %d" % num)
 
-    if(num != 2):
-        print("Usage: python3 takePhoto -focus (int) -due (boolean)")
+    if(num != 3):
+        print("Usage: python3 takePhoto -focus (int) -due (boolean) -direction (boolean)")
         exit(1)
 
     rf = int(sys.argv[1])
     due = int(sys.argv[2])
+    direction = int(sys.argv[3])
+
 
     with picamera.PiCamera() as picam:
 
         #getConfCam(picam)
         setConfCam(picam)
-	#print("RANDOM FOCUS: %d", rf)
+	    #print("RANDOM FOCUS: %d", rf)
 
-        if due == 0:
-            rf = rf + 1
-        elif due == 1:
-            rf = rf + 3
-        
+        if due == 0 and direction == 0:
+            # small step backward
+            rf -= 1
+            print("small step backward: %d" % rf)
+        elif due == 0 and direction == 1:
+            # small step forward
+            rf += 1
+            print("small step forward: %d" % rf)
+        elif due == 1 and direction == 0:
+            # big step backward
+            rf -= 3
+            print("big step backward: %d" % rf)
+        elif due == 1 and direction == 1:
+            # big step forward
+            rf += 3
+            print("big step fordward: %d" % rf)
+        else:
+            print("Do nothing")
+
         stepFocus(rf) # Position focus at random position tested
 
         takePhoto(picam)
