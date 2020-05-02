@@ -71,11 +71,34 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 2. Once we have our model saved we can start to test images captured. simulation.py captured three images and returned and array with 'due' step need to be done. If value returned is equal to 0 a small step (1 focus encrease/decrease) should be perform and if it is equal to 1 then it is a big step (3 focus increase/decrease).
 
+<code>
+
+    pi@raspberrypi:~/arducam $ python3 simulation.py 
+    FOCUS: 7
+    RANDOM FOCUS: 7
+    PHOTO 0 DONE
+    PHOTO 1 DONE
+    PHOTO 2 DONE
+    [1 1 1]
+
+    pi@raspberrypi:~/arducam $ python3 simulation.py 
+    FOCUS: 0
+    RANDOM FOCUS: 0
+    PHOTO 0 DONE
+    PHOTO 1 DONE
+    PHOTO 2 DONE
+    [0 0 0]
+
+</code>
+
 3. Script takePhoto help us text our result visually. 
+
+    small   0  | big 1
+    backward 0 | fordward 1
    
    <code>
         $python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
+    
+    </code>
 
-            small   0  | big 1
-            backward 0 | fordward 1
-   </code>
+
