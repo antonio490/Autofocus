@@ -8,9 +8,9 @@ import cv2 as cv
 IMG_RESIZE = 224
 ID = 0
 
-def blurImage(img):
+def blurImage(img, kernel):
     # apply guassian blur on src image
-    dst = cv.GaussianBlur(img,(5,5),cv.BORDER_DEFAULT)
+    dst = cv.GaussianBlur(img,(kernel,kernel),cv.BORDER_DEFAULT)
     return dst
 
 def resizeImage(img):
@@ -32,7 +32,7 @@ images = glob.glob("/home/antonio/Desktop/Autofocus/allsnaps/*.jpg")
 for image in images:
     img = cv.imread(image, cv.IMREAD_GRAYSCALE)
     img = resizeImage(img)
-    img = blurImage(img)
+    img = blurImage(img, 5)
     saveImage(img, ID)
     print("Image %s done!" % image)
     ID += 1
