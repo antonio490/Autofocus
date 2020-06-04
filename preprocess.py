@@ -52,9 +52,9 @@ def blurMask():
     #cv2.imwrite('cvBlurredOutput.jpg', original)
 '''
 
-def blurImage(img, kernel, dev):
+def blurImage(img, kernel):
     # apply guassian blur on src image
-    dst = cv.GaussianBlur(src=img, ksize=(kernel, kernel), sigmaX=dev, sigmaY=2, borderType= cv.BORDER_DEFAULT)
+    dst = cv.GaussianBlur(src=img, ksize=(kernel, kernel), sigmaX=0, borderType= cv.BORDER_DEFAULT)
     return dst
 
 def resizeImage(img):
@@ -65,13 +65,13 @@ def resizeImage(img):
     return resized
 
 def saveImage(img, num):
-    path = '/home/antonio/Downloads/cifar-10/IMG50K/maskBlur3/'
+    path = '/home/antonio/Downloads/cifar-10/IMG50K/blur1/'
     name = "IMG_" + str(num) + ".png"
     cv.imwrite(os.path.join(path , name), img)
     print("Save %s correctly" % str(path+name))
 
 
-images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/gray/*.png")
+#images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/gray/*.png")
 
 
 
@@ -91,7 +91,7 @@ images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/gray/*.png")
 def main(argv):
 
     ID = 0
-    images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/gray/*.png")
+    images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/focus/*.png")
 
     print ('Number of arguments:', len(sys.argv), 'arguments.')
     print ('Argument List:', str(sys.argv))
@@ -109,7 +109,8 @@ def main(argv):
         #img = resizeImage(img)
 
         if mask == 0:
-            img = blurImage(img, kernel, kernel)
+            print("Blur image with kernel = ", kernel)
+            img = blurImage(img, kernel)
         elif mask == 1:
             print("Triangle mask with kernel = ", kernel)
             img = triangleMask(img, kernel) # triangle mask
