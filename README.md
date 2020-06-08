@@ -73,7 +73,7 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 <code>
 
-     pi@raspberrypi:~/arducam $ python3 simulation.py 
+      pi@raspberrypi:~/arducam $ python3 simulation.py 
      FOCUS: 7
      RANDOM FOCUS: 7
      PHOTO 0 DONE
@@ -84,7 +84,7 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 </code>
 <code>
 
-     pi@raspberrypi:~/arducam $ python3 simulation.py 
+      pi@raspberrypi:~/arducam $ python3 simulation.py 
      FOCUS: 0
      RANDOM FOCUS: 0
      PHOTO 0 DONE
@@ -98,14 +98,14 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 <code>
 
-     small   0  | big 1
+      small   0  | big 1
 
-     backward 0 | fordward 1
+      backward 0 | fordward 1
    
 </code>
 <code>
 
-     $ python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
+      $ python3 takePhoto.py <focus> <due small|big> <direction backward|fordward>
     
 </code>
 
@@ -122,6 +122,6 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 Once we have 8 folders representing the eigth classes we want to classificate, we divide each folder into train and test subfolders using the next command on the terminal:
 
-     $ antonio cifar-10 $ split_folders IMG50K/ --output out/ --ratio .8 .2 --fixed 100
+      antonio cifar-10 $ split_folders IMG50K/ --output out/ --ratio .8 .2 --fixed 100
 
 
