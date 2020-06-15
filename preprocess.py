@@ -8,10 +8,8 @@ import cv2 as cv
 IMG_RESIZE = 32
 
 def rectMask(img, kernel):
-    roi = np.array([[[0, 0], [32, 0], [32, 16], [0, 16]]],dtype = np.int32)
-
-    roi = np.array([[[10, 6], [22, 6], [22, 32], [10, 32]]],dtype = np.int32)
-
+    roi = np.array([[[0, 0], [IMG_RESIZE, 0], [IMG_RESIZE, IMG_RESIZE/2], [0, IMG_RESIZE/2]]],dtype = np.int32)
+    #roi = np.array([[[10, 6], [22, 6], [22, 32], [10, 32]]],dtype = np.int32)
     blurred_image = cv.GaussianBlur(img,(kernel, kernel), 0)
 
     # create a mask for the ROI
@@ -41,16 +39,6 @@ def triangleMask(img, kernel):
 
     return image
 
-'''
-def blurMask():
-    #Python: cv2.bitwise_and(src1, src2[, dst[, mask]]) → dst
-
-    blurred = cv.GaussianBlur(original, (kernel,kernel), 0)
-
-    #create MASK
-    original[0:500, 0:500] = blurred[0:500, 0:500]
-    #cv2.imwrite('cvBlurredOutput.jpg', original)
-'''
 
 def blurImage(img, kernel):
     # apply guassian blur on src image
@@ -64,34 +52,23 @@ def resizeImage(img):
     resized = cv.resize(img, dim, interpolation = cv.INTER_AREA)
     return resized
 
-def saveImage(img, num):
-    path = '/home/antonio/Downloads/cifar-10/IMG50K/blur1/'
-    name = "IMG_" + str(num) + ".png"
+def saveImage(img, num, mask, kernel):
+    #path = '/home/antonio/Downloads/cifar-10/IMG50K/blur31/'
+    path = '/home/antonio/Desktop/photos/'
+
+    name = "IMG_" + str(mask) + "_" + str(kernel) + "_" + str(num) + ".png"
     cv.imwrite(os.path.join(path , name), img)
     print("Save %s correctly" % str(path+name))
 
 
-#images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/gray/*.png")
 
-
-
-#img = cv.imread("/home/antonio/Downloads/cifar-10/IMG50K/gray/IMG_0.png",cv.IMREAD_GRAYSCALE)
-
-
-#imgFiltered = mask(img, 0, 0, 32, 16, kernel) # upper rectangle
-
-#imgFiltered = triangleMask(img, kernel)
-
-# mask(img, 10, 6, 22, 0, kernel) # rectangle centered
-
-#cv.imshow("blur result", imgFiltered)
-#cv.waitKey(0)
-#cv.destroyAllWindows()
 
 def main(argv):
 
     ID = 0
-    images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/focus/*.png")
+    #images = glob.glob("/home/antonio/Downloads/cifar-10/IMG50K/focus/*.png")
+    images = glob.glob("/home/antonio/Desktop/photos/IMG_1591711509.png")
+
 
     print ('Number of arguments:', len(sys.argv), 'arguments.')
     print ('Argument List:', str(sys.argv))
@@ -123,7 +100,7 @@ def main(argv):
         else:
             print("Do nothing")
 
-        saveImage(img, ID)
+        saveImage(img, ID, mask, kernel)
         print("Image %s done!" % image)
         ID += 1
 
