@@ -6,6 +6,7 @@ import csv
 from csv import writer
 import picamera
 import numpy as np
+import cpbd
 from time import ctime, sleep
 from datetime import datetime
 
@@ -19,7 +20,15 @@ BRIGHTNESS = 60
 ls_LAPV = []
 ls_TENG = []
 ls_LAPM = []
+ls_S3 = []
 images_path = []
+
+def S3(img):
+
+    res = cpbd.compute(img)
+    print("S3: ", res)
+    return res
+
 
 def TENG(img):
     """Implements the Tenengrad (TENG) focus measure operator.
@@ -139,16 +148,16 @@ def updateCSV(localMaxPos):
                 step = i+1
 
                 if i==MIN_STEP:
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
                 elif i==(MAX_STEP-1):
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i-1], ls_LAPV[i], (localMaxPos-i), r, trend, images_path[i], due]
                 else:
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i-1], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
 
                 csv_writer.writerow(list_of_elem)
 
     else:
-        headers = ['STEP','LAPV','TENG', 'LAPM', 'prevF', 'nextF', 'MV_STEP', 'ratio', 'trend','IMG_PATH', 'due']
+        headers = ['STEP','LAPV','TENG', 'LAPM', 'S3', 'prevF', 'nextF', 'MV_STEP', 'ratio', 'trend','IMG_PATH', 'due']
         with open(csv_file, 'w', newline='') as write_obj:
             csv_writer = writer(write_obj)
             csv_writer.writerow(headers)
@@ -159,11 +168,11 @@ def updateCSV(localMaxPos):
                 step = i+1
 
                 if i==MIN_STEP:
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
                 elif i==(MAX_STEP-1):
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i-1], ls_LAPV[i], (localMaxPos-i), r, trend, images_path[i], due]
                 else:
-                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_LAPV[i-1], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
+                    list_of_elem = [step, ls_LAPV[i], ls_TENG[i], ls_LAPM[i], ls_S3[i], ls_LAPV[i-1], ls_LAPV[i+1], (localMaxPos-i), r, trend, images_path[i], due]
 
                 csv_writer.writerow(list_of_elem)
 
@@ -176,22 +185,25 @@ def calcFocus(path):
     :type path: string.
     :returns: three focus measures values.
     """
-    img = cv2.imread(path)
+    img = cv2.imread(path, 0)
 
     fmLPAV = LAPV(img)
     fmTENG = TENG(img)
     fmLAPM = LAPM(img)
+    fmS3 = S3(img)
     
     fmLPAV = round(fmLPAV, 5)
     fmLAPM = round(fmLAPM, 5)
     fmTENG = round(fmTENG, 5)
+    fmS3 = round(fmS3, 5)
 
 
     ls_LAPV.append(fmLPAV)
     ls_TENG.append(fmTENG)
     ls_LAPM.append(fmLAPM)
+    ls_S3.append(fmS3)
 
-    return fmLPAV, fmLAPM, fmTENG
+    return fmLPAV, fmLAPM, fmTENG, fmS3
 
 
 def takePhoto(picam, i, step, path):
