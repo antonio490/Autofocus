@@ -64,7 +64,7 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 
 
-# Execution
+## Tree Decision Algorithm
 
 1. First we need to train the model. To do that we have done various executions of the script cam.py which automatically generates a csv file with information from the images captured. 
 
@@ -109,7 +109,15 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
     
 </code>
 
-4. Script preprocess.py blur images on cifar-10 with diffrent blur kernel and different mask regions. We have prepared an album with 8 different classes. Each class the same 50.000 images but with different characteristics:
+## Convolutional Network
+
+![]("/home/antonio/Desktop/tfm/CNN.png")
+
+<img src="/home/antonio/Desktop/tfm/CNN.png"
+     alt="CNN structure"
+     style="float: center/>
+
+1. Script preprocess.py blur images on cifar-10 with diffrent blur kernel and different mask regions. We have prepared an album with 8 different classes. Each class the same 50.000 images but with different characteristics:
 
     - Gray: Original Images
     - Blur3: Gaussian blur kernel 3
