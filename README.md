@@ -111,11 +111,10 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 ## Convolutional Network
 
-![]("/home/antonio/Desktop/tfm/CNN.png")
-
-<img src="/home/antonio/Desktop/tfm/CNN.png"
-     alt="CNN structure"
-     style="float: center/>
+<p align="center">
+  <img src="CNN.png">
+  <img src="summary.png">
+</p>
 
 1. Script preprocess.py blur images on cifar-10 with diffrent blur kernel and different mask regions. We have prepared an album with 8 different classes. Each class the same 50.000 images but with different characteristics:
 
