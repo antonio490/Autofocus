@@ -14,7 +14,7 @@ from datetime import datetime
 MIN_STEP = 0
 MAX_STEP = 10
 MIN_FOCUS = 0
-IMG_SIZE = 244
+IMG_SIZE = 128
 BRIGHTNESS = 60
 
 ls_LAPV = []
@@ -26,7 +26,6 @@ images_path = []
 def S3(img):
 
     res = cpbd.compute(img)
-    print("S3: ", res)
     return res
 
 
@@ -112,21 +111,19 @@ def ratio(i):
     return ratio
 
 def getConfCam(picam):
-    print("Shutter speed: ", picam.shutter_speed)
-    print("Saturation: ", picam.saturation)
-    print("Sharpness: ", picam.sharpness)
-    print("Framerate: ", picam.framerate)
-    print("Resolution: ", picam.resolution)
-    print("Exposure mode: ", picam.exposure_mode)
-    print("Exposure compensation: ", picam.exposure_compensation)
-    print("Contrast: ", picam.contrast)
-    print("Brightness: ", picam.brightness)
-    print("ISO: ", picam.ISO)
-    print("Veritical flip: ", picam.vflip)
-    print("Horizontal flip: ", picam.hflip)
+    #print("Shutter speed: ", picam.shutter_speed)
+    #print("Saturation: ", picam.saturation)
+    #print("Sharpness: ", picam.sharpness)
+    #print("Framerate: ", picam.framerate)
+    #print("Resolution: ", picam.resolution)
+    #print("Exposure mode: ", picam.exposure_mode)
+    #print("Exposure compensation: ", picam.exposure_compensation)
+    #print("Contrast: ", picam.contrast)
+    #print("Brightness: ", picam.brightness)
+    print("--Brightness: %s --Resolution: %s" % (picam.brightness, picam.resolution))
 
 def setConfCam(picam):
-    picam.resolution = (244, 244)
+    picam.resolution = (IMG_SIZE, IMG_SIZE)
     picam.color_effects = (128,128)
     picam.brightness = BRIGHTNESS
     picam.contrast = 30
@@ -197,7 +194,6 @@ def calcFocus(path):
     fmTENG = round(fmTENG, 5)
     fmS3 = round(fmS3, 5)
 
-
     ls_LAPV.append(fmLPAV)
     ls_TENG.append(fmTENG)
     ls_LAPM.append(fmLAPM)
@@ -229,7 +225,12 @@ if __name__ == "__main__":
     sf = MIN_FOCUS
 
     wdir = os.getcwd()
-    new_dir = "/album"
+    new_dir = "/album-V2"
+
+    
+
+    if len(sys.argv) == 2:
+        BRIGHTNESS = int(sys.argv[1])
 
     if not os.path.exists(wdir+new_dir):
         os.mkdir(wdir+new_dir) 
@@ -240,8 +241,8 @@ if __name__ == "__main__":
 
     with picamera.PiCamera() as picam:
 
-        #getConfCam(picam)
         setConfCam(picam)
+        getConfCam(picam)
 
         minFocus(MIN_FOCUS)
 
@@ -250,7 +251,6 @@ if __name__ == "__main__":
             stepFocus(sf)
             sf += 1 
 
-        
         indexMax = ls_LAPV.index(max(ls_LAPV))
         print("MAX: %d POSITION: %d" % (ls_LAPV[indexMax], indexMax+1))
 
