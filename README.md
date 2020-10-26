@@ -94,7 +94,7 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
 
 </code>
 
-3. Script takePhoto help us text our result visually. 
+3. Script takePhoto help us test our results visually. 
 
 <code>
 
@@ -116,18 +116,18 @@ https://www.cs.usask.ca/faculty/eramian/defocusseg/
   <img src="summary.png">
 </p>
 
+
+
 1. Script preprocess.py blur images on cifar-10 with diffrent blur kernel and different mask regions. We have prepared an album with 8 different classes. Each class the same 50.000 images but with different characteristics:
 
     - Gray: Original Images
     - Blur3: Gaussian blur kernel 3
-    - Blur5: Gaussian blur kernel 5
-    - Blur9: Gaussian blur kernel 9
     - Blur15: Gaussian blur kernel 15
     - maskBlur1: Gaussian blur on mask with triangular shape.
     - maskBlur2: Gaussian blur on mask with rectangular shape on top of the image.
     - maskBlur3: Gaussian blur on mask with rectangular shape on center of the image.
 
-Once we have 8 folders representing the eigth classes we want to classificate, we divide each folder into train and test subfolders using the next command on the terminal:
+Once we have 8 folders representing the eigth classes we want to classificate, we divide each folder into train and test subfolders using the next command in the terminal:
 
       antonio cifar-10 $ split_folders IMG50K/ --output out/ --ratio .8 .2 --fixed 100
 
